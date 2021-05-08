@@ -1,42 +1,41 @@
 import pickle
-from typing import Dict, Union
+from typing import Dict, Union, List
 
 import numpy as np
 import pandas as pd
 from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score, f1_score
 
-#from ..entities.train_params import TrainingParams
+from ..entities.model_params import ModelParams
 
-
+SklearnRegressionModel = Union[LinearSVC]
 
 
 def train_model(
-    features: pd.DataFrame, target: pd.Series
+        features: np.ndarray, target: np.ndarray,
+        model_params: List[ModelParams], model_name
 ) -> LinearSVC:
-    model = LinearSVC()
+    params = [item for item in model_params if item.model_name == model_name]
+    if model_name == "LinearSVC":
+        model = LinearSVC(**(params[0]))
+    else:
+        raise NotImplementedError()
     model.fit(features, target)
     return model
 
 
 def predict_model(
-    model: SklearnRegressionModel, features: pd.DataFrame, use_log_trick: bool = True
+        model: SklearnRegressionModel, features: np.ndarray
 ) -> np.ndarray:
-    predicts = model.predict(features)
-    if use_log_trick:
-        predicts = np.exp(predicts)
-    return predicts
+    return model.predict(features)
 
 
 def evaluate_model(
-    predicts: np.ndarray, target: pd.Series, use_log_trick: bool = False
+        target: np.ndarray, predicts: np.ndarray
 ) -> Dict[str, float]:
-    if use_log_trick:
-        target = np.exp(target)
     return {
-        "r2_score": r2_score(target, predicts),
-        "rmse": mean_squared_error(target, predicts, squared=False),
-        "mae": mean_absolute_error(target, predicts),
+        "accuracy_score": accuracy_score(target, predicts),
+        "f1_score": f1_score(target, predicts),
     }
 
 

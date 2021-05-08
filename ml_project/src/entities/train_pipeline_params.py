@@ -12,7 +12,7 @@ from .model_params import ModelParams
 class TrainingPipelineParams:
     input_data_path: str
     output_model_path: str
-    metric_path: str
+    metrics_path: str
     feature_params: FeatureParams
     splitting_params: SplittingParams
     model_params: List[ModelParams]

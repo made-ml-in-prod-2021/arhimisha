@@ -27,20 +27,35 @@ def get_features_data(df: pd.DataFrame, params: FeatureParams) -> pd.DataFrame:
 def split_data(
         features: DataForSplit, target: DataForSplit,
         split_size: float, random_state: int,
+        stratify: DataForSplit
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     return train_test_split(features, target,
                             test_size=split_size,
-                            random_state=random_state
-                            )
+                            random_state=random_state,
+                            stratify=stratify)
 
 
 def split_train_valid_data(
-        features: DataForSplit, target: DataForSplit, params: SplittingParams
+        features: DataForSplit, target: DataForSplit,
+        params: SplittingParams, stratify: DataForSplit
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    return split_data(features, target, params.val_size, params.random_state)
+    return split_data(
+        features,
+        target,
+        params.val_size,
+        params.random_state,
+        stratify=stratify
+    )
 
 
 def split_train_test_data(
-        features: DataForSplit, target: DataForSplit, params: SplittingParams
+        features: DataForSplit, target: DataForSplit,
+        params: SplittingParams, stratify: DataForSplit
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    return split_data(features, target, params.val_size, params.random_state)
+    return split_data(
+        features,
+        target,
+        params.test_size,
+        params.random_state,
+        stratify=stratify
+    )
