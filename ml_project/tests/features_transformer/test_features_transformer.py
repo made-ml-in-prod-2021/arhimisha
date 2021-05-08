@@ -28,11 +28,6 @@ def numerical_values() -> np.ndarray:
     return np.random.random(4) * 10 + 100
 
 
-# @pytest.fixture()
-# def categorical_values_with_nan(categorical_values: List[str]) -> List[str]:
-#     return categorical_values + [np.nan]
-
-
 @pytest.fixture
 def fake_data(
         categorical_feature: str, categorical_values: List[str],
