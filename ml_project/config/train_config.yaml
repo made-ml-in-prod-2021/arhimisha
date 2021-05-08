@@ -1,5 +1,6 @@
 input_data_path: "data/external/heart.csv"
 output_model_path: "models/model.pkl"
+output_transformer_path: "models/transformer.pkl"
 metrics_path: "models/metrics.json"
 splitting_params:
   val_size: 0.1
@@ -20,6 +21,7 @@ feature_params:
     - "sex"
     - "cp"
     - "fbs"
+    - "restecg"
     - "exang"
     - "slope"
     - "ca"

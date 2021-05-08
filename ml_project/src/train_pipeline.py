@@ -5,21 +5,21 @@ import sys
 import click
 import pandas as pd
 
-from .data import (
+from src.data import (
     read_data,
     get_target_data,
     get_features_data,
     split_train_valid_data,
     split_train_test_data
 )
-from .entities.train_pipeline_params import (
+from src.entities.train_pipeline_params import (
     TrainingPipelineParams,
     read_training_pipeline_params,
 )
-from .features_transformer.build_features_transformer import build_transformer
-from .models.model_fit_predict import (
+from src.features_transformer.build_features_transformer import build_transformer
+from src.models.model_fit_predict import (
     train_model,
-    serialize_model,
+    serialize_object,
     predict_model,
     evaluate_model,
 )
@@ -28,9 +28,7 @@ logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)
 log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logging.basicConfig(level=logging.INFO, format=log_fmt)
-# todo проверить что все коректно выводится
-# logger.setLevel(logging.INFO)
-logger.addHandler(handler)
+
 
 
 def train_pipeline(training_pipeline_params: TrainingPipelineParams, model_name: str):
@@ -76,6 +74,8 @@ def train_pipeline(training_pipeline_params: TrainingPipelineParams, model_name:
         X_train, y_train, training_pipeline_params.model_params, model_name
     )
 
+    logger.info(f"model is {model}")
+
     predicts_test = predict_model(model, X_test)
     predicts_valid = predict_model(model, X_valid)
 
@@ -83,14 +83,14 @@ def train_pipeline(training_pipeline_params: TrainingPipelineParams, model_name:
     metrics_valid = evaluate_model(y_valid, predicts_valid)
 
     with open(training_pipeline_params.metrics_path, "w") as metric_file:
-        json.dump(metrics_test, metric_file)
-        json.dump(metrics_valid, metric_file)
+        json.dump([metrics_test, metrics_valid], metric_file)
     logger.info(f"metrics_test is {metrics_test}")
     logger.info(f"metrics_valid is {metrics_valid}")
 
-    path_to_model = serialize_model(model, training_pipeline_params.output_model_path)
+    path_to_model = serialize_object(model, training_pipeline_params.output_model_path)
+    path_to_transformer = serialize_object(transformer, training_pipeline_params.output_transformer_path)
 
-    return path_to_model, metrics_valid
+    return path_to_model, path_to_transformer, metrics_valid
 
 
 @click.command(name="train_pipeline")

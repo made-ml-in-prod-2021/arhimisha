@@ -1,5 +1,5 @@
 import pickle
-from typing import Dict, Union, List
+from typing import Dict, Union, List, Any
 
 import numpy as np
 import pandas as pd
@@ -17,7 +17,7 @@ def train_model(
 ) -> LinearSVC:
     params = [item for item in model_params if item.model_name == model_name]
     if model_name == "LinearSVC":
-        model = LinearSVC(**(params[0]))
+        model = LinearSVC(**(params[0].params))
     else:
         raise NotImplementedError()
     model.fit(features, target)
@@ -39,7 +39,7 @@ def evaluate_model(
     }
 
 
-def serialize_model(model: SklearnRegressionModel, output: str) -> str:
+def serialize_object(obj: Any, output: str) -> str:
     with open(output, "wb") as f:
-        pickle.dump(model, f)
+        pickle.dump(obj, f)
     return output
