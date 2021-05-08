@@ -65,4 +65,3 @@ def test_process_categorical_features(
     assert np.mean(transformed[:, 3]) < 0.001
     assert np.std(transformed[:, 3]) > 0.99999
     assert np.std(transformed[:, 3]) < 1.0001
-

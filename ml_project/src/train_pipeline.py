@@ -3,7 +3,6 @@ import logging
 import sys
 
 import click
-import pandas as pd
 
 from src.data import (
     read_data,

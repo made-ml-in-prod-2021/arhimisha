@@ -1,6 +1,4 @@
 import os
-from typing import List
-
 from py._path.local import LocalPath
 
 from src.train_pipeline import train_pipeline
