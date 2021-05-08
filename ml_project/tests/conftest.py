@@ -3,7 +3,7 @@ import os
 import pytest
 from typing import List
 
-from src.entities import FeatureParams, SplittingParams
+from src.entities import FeatureParams, SplittingParams, ModelParams
 
 
 @pytest.fixture()
@@ -64,3 +64,18 @@ def splitting_params() -> SplittingParams:
         random_state=42
     )
 
+
+@pytest.fixture()
+def model_params() -> ModelParams:
+    return ModelParams(
+        model_name="LinearSVC",
+        params={
+            "penalty": "l2",
+            "loss": "squared_hinge",
+            "dual": False,
+            "tol": 0.0001,
+            "C": 0.5,
+            "multi_class": "ovr",
+            "fit_intercept": True,
+        }
+    )

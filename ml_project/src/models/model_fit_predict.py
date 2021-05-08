@@ -2,7 +2,6 @@ import pickle
 from typing import Dict, Union, List, Any
 
 import numpy as np
-import pandas as pd
 from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score, f1_score
 
