@@ -1,7 +1,7 @@
-input_data_path: "data/external/heart.csv"
-output_model_path: "models/model.pkl"
-output_transformer_path: "models/transformer.pkl"
-metrics_path: "models/metrics.json"
+input_data_path: "ml_project/data/external/heart.csv"
+output_model_path: "ml_project/models/model.pkl"
+output_transformer_path: "ml_project/models/transformer.pkl"
+metrics_path: "ml_project/models/metrics.json"
 splitting_params:
   val_size: 0.1
   test_size: 0.1

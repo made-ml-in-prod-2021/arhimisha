@@ -3,6 +3,7 @@ from typing import List
 from py._path.local import LocalPath
 
 from src.train_pipeline import train_pipeline
+from src.predict_pipeline import predict_pipeline
 from src.entities import (
     TrainingPipelineParams,
     SplittingParams,
@@ -12,11 +13,12 @@ from src.entities import (
 
 
 def test_train_e2e(
-    tmpdir: LocalPath,
-    dataset_path: str,
-    feature_params: FeatureParams,
-    splitting_params: SplittingParams,
-    models_params: List[ModelParams]
+        tmpdir: LocalPath,
+        dataset_path: str,
+        dataset_for_persict_path: str,
+        feature_params: FeatureParams,
+        splitting_params: SplittingParams,
+        models_params: List[ModelParams]
 ):
     expected_output_model_path = tmpdir.join("model.pkl")
     expected_output_transformer_path = tmpdir.join("transformer.pkl")
@@ -37,3 +39,12 @@ def test_train_e2e(
         assert os.path.exists(real_model_path)
         assert os.path.exists(real_transformer_path)
         assert os.path.exists(params.metrics_path)
+
+        result_path = tmpdir.join("result.json")
+        expected_result_path = predict_pipeline(
+            real_model_path,
+            real_transformer_path,
+            dataset_for_persict_path,
+            result_path
+        )
+        assert os.path.exists(expected_result_path)

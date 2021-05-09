@@ -20,7 +20,9 @@ def get_target_data(df: pd.DataFrame, params: FeatureParams) -> pd.DataFrame:
 
 
 def get_features_data(df: pd.DataFrame, params: FeatureParams) -> pd.DataFrame:
-    features = df[params.categorical_features + params.numerical_features]
+    columns = [column for column in df.columns if (column in params.categorical_features or
+                                                   column in params.numerical_features)]
+    features = df[columns]
     return features
 
 

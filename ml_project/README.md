@@ -30,20 +30,32 @@ Project Organization
 
 --------
 Для обучения модели можно, находясь в папке проекта воспользоваться командой:
-```bash
-python src/train_pipeline.py <path to config> <model name>
+```shell
+python ml_project/src/train_pipeline.py <path to config> <model name>
 ```
-Оригинальный путm до конфиг-фала обучения - `config/train_config.yaml`.
+Оригинальный путm до конфиг-фала обучения - `ml_project/config/train_config.yaml`.
 Для параметра `<model name>` доступны следующие значения:
  - LinearSVC
  - SGDClassifier
 
 Пример команды для обучения:
+```shell
+python ml_project/src/train_pipeline.py ml_project/config/train_config.yaml LinearSVC
 ```
-python src/train_pipeline.py config/train_config.yaml LinearSVC
+После обучения, полученная модель и трансформер данных сохраняются в указанный в конфигурационном файле путях.
+Их можно использовать для предсказания результатов для аналогичных данных с помощью другой команды, находясь в папке проекта:
+```shell
+python ml_project/src/predict_pipeline.py <path to model> <path to transformer> <path to data> <path for save result>
 ```
+ - `<path to model>` - Путь до сохраненной модели после обучения
+ - `<path to transformer>` - Путm до сохраненного трансформера данных после обучения
+ - `<path to data>` - Путь до данных в формате .csv аналогично файлу `ml_project/tests/test_data_for_predict.csv`
+ - `<path for save result>` - Путь для сохранения результата работы модели.
 
-
+Пример команды:
+```shell
+python ml_project/src/predict_pipeline.py ml_project/models/model.pkl ml_project/models/transformer.pkl ml_project/tests/test_data_for_predict.csv result.json
+```
 
 
 --------

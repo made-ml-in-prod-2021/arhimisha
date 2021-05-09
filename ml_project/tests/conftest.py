@@ -13,6 +13,12 @@ def dataset_path():
 
 
 @pytest.fixture()
+def dataset_for_persict_path():
+    curdir = os.path.dirname(__file__)
+    return os.path.join(curdir, "test_data_for_predict.csv")
+
+
+@pytest.fixture()
 def target_feature() -> List[str]:
     return ["target"]
 
