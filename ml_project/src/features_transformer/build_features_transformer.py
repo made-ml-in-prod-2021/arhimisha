@@ -12,11 +12,12 @@ from ..entities.feature_params import FeatureParams
 
 Array_2D = Union[pd.DataFrame, np.ndarray]
 
+
 class MyStandardScaler(TransformerMixin):
-    def transform(self, X: Array_2D, *_) ->Array_2D:
+    def transform(self, X: Array_2D, *_) -> Array_2D:
         return (X - self.means) / self.std
 
-    def fit(self, X: Array_2D, *_) ->TransformerMixin:
+    def fit(self, X: Array_2D, *_) -> TransformerMixin:
         self.means = np.mean(np.array(X), axis=0, keepdims=True)
         self.std = np.std(np.array(X), axis=0, keepdims=True)
         self.std[self.std == 0.] = 1
