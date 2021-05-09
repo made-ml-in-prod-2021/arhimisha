@@ -70,7 +70,7 @@ def train_pipeline(training_pipeline_params: TrainingPipelineParams, model_name:
     logger.info(f"y_test.shape is {y_test.shape}")
 
     model = train_model(
-        X_train, y_train, training_pipeline_params.model_params, model_name
+        X_train, y_train, training_pipeline_params.models_params, model_name
     )
 
     logger.info(f"model is {model}")

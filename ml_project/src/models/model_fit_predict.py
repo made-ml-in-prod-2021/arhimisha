@@ -3,6 +3,7 @@ from typing import Dict, Union, List, Any
 
 import numpy as np
 from sklearn.svm import LinearSVC
+from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import accuracy_score, f1_score
 
 from ..entities.model_params import ModelParams
@@ -14,9 +15,11 @@ def train_model(
         features: np.ndarray, target: np.ndarray,
         model_params: List[ModelParams], model_name
 ) -> LinearSVC:
-    params = [item for item in model_params if item.model_name == model_name]
+    params = [item for item in model_params if item.model_name == model_name][0]
     if model_name == "LinearSVC":
-        model = LinearSVC(**(params[0].params))
+        model = LinearSVC(**params.params)
+    elif model_name == "SGDClassifier":
+        model = SGDClassifier(**params.params)
     else:
         raise NotImplementedError()
     model.fit(features, target)

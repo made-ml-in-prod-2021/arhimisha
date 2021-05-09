@@ -1,6 +1,6 @@
 import os
 import pickle
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
 import pandas as pd
@@ -35,29 +35,31 @@ def features_and_target(
 
 def test_train_and_predict_model(
         features_and_target: Tuple[pd.DataFrame, np.ndarray],
-        model_params: ModelParams
+        models_params: List[ModelParams]
 ):
     features, target = features_and_target
-    model = train_model(features,
-                        target,
-                        model_params=[model_params],
-                        model_name=model_params.model_name)
-    assert predict_model(model, features).shape[0] == target.shape[0]
+    for model_params in models_params:
+        model = train_model(features,
+                            target,
+                            model_params=models_params,
+                            model_name=model_params.model_name)
+        assert predict_model(model, features).shape[0] == target.shape[0]
 
 
 def test_evaluate_model(
         features_and_target: Tuple[pd.DataFrame, np.ndarray],
-        model_params: ModelParams
+        models_params: List[ModelParams]
 ):
     features, target = features_and_target
-    model = train_model(features,
-                        target,
-                        model_params=[model_params],
-                        model_name=model_params.model_name)
-    predict = predict_model(model, features)
-    scores = evaluate_model(target, predict)
-    for score in scores.values():
-        assert score > 0.8
+    for model_params in models_params:
+        model = train_model(features,
+                            target,
+                            model_params=models_params,
+                            model_name=model_params.model_name)
+        predict = predict_model(model, features)
+        scores = evaluate_model(target, predict)
+        for score in scores.values():
+            assert score > 0.7
 
 
 def test_serialize_model(tmpdir: LocalPath):

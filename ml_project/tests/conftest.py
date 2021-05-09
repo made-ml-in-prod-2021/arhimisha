@@ -66,7 +66,7 @@ def splitting_params() -> SplittingParams:
 
 
 @pytest.fixture()
-def model_params() -> ModelParams:
+def model_params_LinearSVC() -> ModelParams:
     return ModelParams(
         model_name="LinearSVC",
         params={
@@ -79,3 +79,32 @@ def model_params() -> ModelParams:
             "fit_intercept": True,
         }
     )
+
+
+@pytest.fixture()
+def model_params_SGDClassifier() -> ModelParams:
+    return ModelParams(
+        model_name="SGDClassifier",
+        params={
+            "loss": "hinge",
+            "penalty": "elasticnet",
+            "alpha": 0.0001,
+            "l1_ratio": 0.1,
+            "fit_intercept": True,
+            "max_iter": 1000,
+            "shuffle": True,
+            "tol": 0.0001,
+            "random_state": 42,
+        }
+    )
+
+
+@pytest.fixture()
+def models_params(
+        model_params_LinearSVC: ModelParams,
+        model_params_SGDClassifier: ModelParams
+) -> List[ModelParams]:
+    models_params = []
+    models_params.append(model_params_LinearSVC)
+    models_params.append(model_params_SGDClassifier)
+    return models_params

@@ -16,7 +16,7 @@ class TrainingPipelineParams:
     metrics_path: str
     feature_params: FeatureParams
     splitting_params: SplittingParams
-    model_params: List[ModelParams]
+    models_params: List[ModelParams]
 
 
 def read_training_pipeline_params(path: str) -> TrainingPipelineParams:

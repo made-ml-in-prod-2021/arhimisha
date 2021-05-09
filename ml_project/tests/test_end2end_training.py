@@ -1,4 +1,5 @@
 import os
+from typing import List
 from py._path.local import LocalPath
 
 from src.train_pipeline import train_pipeline
@@ -15,7 +16,7 @@ def test_train_e2e(
     dataset_path: str,
     feature_params: FeatureParams,
     splitting_params: SplittingParams,
-    model_params: ModelParams
+    models_params: List[ModelParams]
 ):
     expected_output_model_path = tmpdir.join("model.pkl")
     expected_output_transformer_path = tmpdir.join("transformer.pkl")
@@ -27,11 +28,12 @@ def test_train_e2e(
         metrics_path=expected_metrics_path,
         splitting_params=splitting_params,
         feature_params=feature_params,
-        model_params=[model_params]
+        models_params=models_params
     )
-    real_model_path, real_transformer_path, metrics = train_pipeline(params, model_params.model_name)
-    for score in metrics.values():
-        assert score > 0.8
-    assert os.path.exists(real_model_path)
-    assert os.path.exists(real_transformer_path)
-    assert os.path.exists(params.metrics_path)
+    for model_params in models_params:
+        real_model_path, real_transformer_path, metrics = train_pipeline(params, model_params.model_name)
+        for score in metrics.values():
+            assert score > 0.7
+        assert os.path.exists(real_model_path)
+        assert os.path.exists(real_transformer_path)
+        assert os.path.exists(params.metrics_path)

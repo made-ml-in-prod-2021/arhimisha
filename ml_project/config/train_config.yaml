@@ -6,7 +6,7 @@ splitting_params:
   val_size: 0.1
   test_size: 0.1
   random_state: 42
-model_params:
+models_params:
   - model_name: "LinearSVC"
     params:
       penalty: "l2"
@@ -16,6 +16,17 @@ model_params:
       C: 0.5
       multi_class: "ovr"
       fit_intercept: True
+  - model_name: "SGDClassifier"
+    params:
+      loss: "hinge"
+      penalty: "elasticnet"
+      alpha: 0.0001
+      l1_ratio: 0.1
+      fit_intercept: True
+      max_iter: 1000
+      shuffle: True
+      tol: 0.0001
+      random_state: 42
 feature_params:
   categorical_features:
     - "sex"
