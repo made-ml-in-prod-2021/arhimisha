@@ -8,13 +8,13 @@ from sklearn.metrics import accuracy_score, f1_score
 
 from ..entities.model_params import ModelParams
 
-SklearnRegressionModel = Union[LinearSVC]
+SklearnModels = Union[LinearSVC, SGDClassifier]
 
 
 def train_model(
         features: np.ndarray, target: np.ndarray,
         model_params: List[ModelParams], model_name
-) -> LinearSVC:
+) -> SklearnModels:
     params = [item for item in model_params if item.model_name == model_name][0]
     if model_name == "LinearSVC":
         model = LinearSVC(**params.params)
@@ -27,7 +27,7 @@ def train_model(
 
 
 def predict_model(
-        model: SklearnRegressionModel, features: np.ndarray
+        model: SklearnModels, features: np.ndarray
 ) -> np.ndarray:
     return model.predict(features)
 
