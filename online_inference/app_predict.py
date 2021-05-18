@@ -6,11 +6,12 @@ from typing import List, Union, Optional
 
 import pandas as pd
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from sklearn.svm import LinearSVC
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
+from src.entities.fearures_info import FeaturesInfo, read_features_info
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)
@@ -37,26 +38,41 @@ class YResponse(BaseModel):
 
 model: Optional[SklearnModel] = None
 transformer: Optional[Pipeline] = None
+features_info: Optional[FeaturesInfo] = None
 
 
 def make_predict(
         data: List[List[Union[float, str]]],
         features: List[str],
         model: SklearnModel,
-        transformer: Pipeline
+        transformer: Pipeline,
+        features_info: FeaturesInfo
 ) -> List[YResponse]:
-    # todo проверка колонок?
+
+    logger.info(f"check data")
+    if not features_info.features_number == len(features):
+        raise HTTPException(status_code=400, detail="Wrong number of features")
+    for x in data:
+        if not len(x) == len(features):
+            raise HTTPException(status_code=400, detail="Wrong number of features in data")
+    if not features_info.feature_names == features:
+        raise HTTPException(status_code=400, detail="Wrong names of features")
+
     logger.info(f"start predict")
     logger.info(f"model is {model}")
     logger.info(f"transformer is {transformer}")
+
     data = pd.DataFrame(data, columns=features)
     logger.info(f"data.shape is {data.shape}")
+
     logger.info(f"start transform data")
     transformed_data = transformer.transform(data)
     logger.info(f"transformed_data.shape is {transformed_data.shape}")
+
     logger.info(f"start predict")
     predicts = model.predict(transformed_data)
     logger.info(f"predict.shape is {predicts.shape}")
+
     return [YResponse(predict=p) for p in list(predicts)]
 
 
@@ -72,28 +88,28 @@ async def main():
 def load_model():
     global model
     global transformer
-    # todo correct PATH_TO_MODEL
+    global features_info
+
     model_path = os.getenv("PATH_TO_MODEL")
-    model_path = "models/model.pkl"
     if model_path is None:
-        err = f"PATH_TO_MODEL {model_path} is None"
-        logger.error(err)
-        raise RuntimeError(err)
-    # todo correct transformer_path
+        model_path = "models/model.pkl"
+
     transformer_path = os.getenv("PATH_TO_TRANSFORMER")
-    transformer_path = "models/transformer.pkl"
     if transformer_path is None:
-        err = f"transformer_path {transformer_path} is None"
-        logger.error(err)
-        raise RuntimeError(err)
+        transformer_path = "models/transformer.pkl"
+
+    features_info_path = os.getenv("PATH_TO_FEATURE_INFO")
+    if features_info_path == None:
+        features_info_path = "models/features_info.yaml"
 
     model = load_object(model_path)
     transformer = load_object(transformer_path)
+    features_info = read_features_info(features_info_path)
 
 
 @app.get("/predict/", response_model=List[YResponse])
 async def predict(request: XInput):
-    return make_predict(request.data, request.features, model, transformer)
+    return make_predict(request.data, request.features, model, transformer, features_info)
 
 
 if __name__ == "__main__":
