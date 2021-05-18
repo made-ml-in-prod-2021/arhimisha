@@ -14,6 +14,10 @@ setup(
         "uvicorn==0.13.4",
         "requests==2.25.1",
         "pytest==6.2.4",
+        "click==7.1.2",
+        "dataclasses==0.6",
+        "pyyaml==3.11",
+        "marshmallow-dataclass==8.3.0",
     ],
     license="MIT",
 )
