@@ -7,6 +7,7 @@ from typing import List, Union, Optional
 import pandas as pd
 import uvicorn
 from fastapi import FastAPI
+from fastapi.testclient import TestClient
 from pydantic import BaseModel
 from sklearn.svm import LinearSVC
 from sklearn.linear_model import SGDClassifier
@@ -32,7 +33,7 @@ class XInput(BaseModel):
 
 
 class YResponse(BaseModel):
-    response: int
+    predict: int
 
 
 model: Optional[SklearnModel] = None
@@ -57,14 +58,14 @@ def make_predict(
     logger.info(f"start predict")
     predicts = model.predict(transformed_data)
     logger.info(f"predict.shape is {predicts.shape}")
-    return [YResponse(response=p) for p in list(predicts)]
+    return [YResponse(predict=p) for p in list(predicts)]
 
 
 app = FastAPI()
 
 
 @app.get("/")
-def main():
+async def main():
     return "it is entry point of our predictor"
 
 
@@ -92,10 +93,21 @@ def load_model():
 
 
 @app.get("/predict/", response_model=List[YResponse])
-def predict(request: XInput):
+async def predict(request: XInput):
     return make_predict(request.data, request.features, model, transformer)
 
 
 if __name__ == "__main__":
     print(os.getcwd())
     uvicorn.run("app:app", host="0.0.0.0", port=os.getenv("PORT", 80))
+
+
+client = TestClient(app)
+
+
+def test_main():
+    response = client.get("/")
+    assert False
+    print(response)
+
+
