@@ -27,7 +27,7 @@ Project Organization
 ```shell
 python ml_project/src/train_pipeline.py <path to config> <model name>
 ```
-Оригинальный путm до конфиг-фала обучения - `ml_project/config/train_config.yaml`.
+Оригинальный путь до конфиг-файла обучения - `ml_project/config/train_config.yaml`.
 Для параметра `<model name>` доступны следующие значения:
  - LinearSVC
  - SGDClassifier
