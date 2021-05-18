@@ -7,7 +7,6 @@ from typing import List, Union, Optional
 import pandas as pd
 import uvicorn
 from fastapi import FastAPI
-from fastapi.testclient import TestClient
 from pydantic import BaseModel
 from sklearn.svm import LinearSVC
 from sklearn.linear_model import SGDClassifier
@@ -75,14 +74,14 @@ def load_model():
     global transformer
     # todo correct PATH_TO_MODEL
     model_path = os.getenv("PATH_TO_MODEL")
-    model_path = "model.pkl"
+    model_path = "models/model.pkl"
     if model_path is None:
         err = f"PATH_TO_MODEL {model_path} is None"
         logger.error(err)
         raise RuntimeError(err)
     # todo correct transformer_path
     transformer_path = os.getenv("PATH_TO_TRANSFORMER")
-    transformer_path = "transformer.pkl"
+    transformer_path = "models/transformer.pkl"
     if transformer_path is None:
         err = f"transformer_path {transformer_path} is None"
         logger.error(err)
@@ -98,16 +97,4 @@ async def predict(request: XInput):
 
 
 if __name__ == "__main__":
-    print(os.getcwd())
-    uvicorn.run("app:app", host="0.0.0.0", port=os.getenv("PORT", 80))
-
-
-client = TestClient(app)
-
-
-def test_main():
-    response = client.get("/")
-    assert False
-    print(response)
-
-
+    uvicorn.run("app_predict:app", host="0.0.0.0", port=os.getenv("PORT", 80))
