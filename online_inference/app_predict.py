@@ -48,7 +48,6 @@ def make_predict(
         transformer: Pipeline,
         features_info: FeaturesInfo
 ) -> List[YResponse]:
-
     logger.info(f"check data")
     if not features_info.features_number == len(features):
         raise HTTPException(status_code=400, detail="Wrong number of features")

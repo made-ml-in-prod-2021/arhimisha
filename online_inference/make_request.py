@@ -8,7 +8,6 @@ import urllib
 import json
 from app_predict import XInput, YResponse
 
-
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler(sys.stdout)
 log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -27,7 +26,7 @@ def make_predict(server_address: str,
         json=data_for_predict.dict(),
     )
     logger.info(f"parse result")
-    result=[]
+    result = []
     if (response.status_code == 200):
         for elem in response.json():
             predict = YResponse(**elem)
@@ -41,13 +40,14 @@ def make_predict(server_address: str,
         with open(path_for_save_result, "w") as result_file:
             json.dump(response.json(), result_file)
 
+
 @click.command(name="make_predict")
 @click.argument("server_address")
 @click.argument("path_to_data")
 @click.argument("path_for_save_result")
 def make_predict_command(server_address: str,
-                             path_to_data: str,
-                             path_for_save_result: str):
+                         path_to_data: str,
+                         path_for_save_result: str):
     make_predict(server_address, path_to_data, path_for_save_result)
 
 

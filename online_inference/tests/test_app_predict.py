@@ -41,4 +41,3 @@ def test_predict_error(dataset_for_predict_path: str):
         data_with_wrong_data = XInput(data=[[1]], features=data.columns.tolist())
         response = client.get("/predict/", json=data_with_wrong_data.dict())
         assert response.status_code == 400
-
