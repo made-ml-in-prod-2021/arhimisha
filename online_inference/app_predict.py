@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from sklearn.svm import LinearSVC
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
-from src.entities.fearures_info import FeaturesInfo, read_features_info
+from src.entities.features_info import FeaturesInfo, read_features_info
 
 logger = logging.getLogger(__name__)
 log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
