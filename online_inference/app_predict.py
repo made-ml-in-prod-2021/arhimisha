@@ -2,11 +2,13 @@ import sys
 import logging
 import os
 import pickle
-from typing import List, Union, Optional
+from typing import List, Union, Optional, NoReturn
 
 import pandas as pd
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
 from sklearn.svm import LinearSVC
 from sklearn.linear_model import SGDClassifier
@@ -40,6 +42,32 @@ transformer: Optional[Pipeline] = None
 features_info: Optional[FeaturesInfo] = None
 
 
+def valid_data(
+        data: List[List[Union[float, str]]],
+        features: List[str],
+        features_info: FeaturesInfo
+) -> NoReturn:
+    logger.info(f"check data")
+    if not features_info.features_number == len(features):
+        details = f"Wrong number of features: {features_info.features_number} != {len(features)}\n" \
+                  f"expected_features={features_info.feature_names}\n" \
+                  f"features={features}"
+        logger.error(details)
+        raise HTTPException(status_code=400, detail=details)
+    for x in data:
+        if not len(x) == len(features):
+            details = f"Wrong number of features in data: {len(x)} != {len(features)}"
+            logger.error(details)
+            raise HTTPException(status_code=400, detail=details)
+    for expected_feature, given_feature in zip(features_info.feature_names, features):
+        if not expected_feature == given_feature:
+            details = f"Wrong names of features:\n" \
+                      f"expected_feature={expected_feature}\n" \
+                      f"given_feature={given_feature}"
+            logger.error(details)
+            raise HTTPException(status_code=400, detail=details)
+
+
 def make_predict(
         data: List[List[Union[float, str]]],
         features: List[str],
@@ -47,14 +75,7 @@ def make_predict(
         transformer: Pipeline,
         features_info: FeaturesInfo
 ) -> List[YResponse]:
-    logger.info(f"check data")
-    if not features_info.features_number == len(features):
-        raise HTTPException(status_code=400, detail="Wrong number of features")
-    for x in data:
-        if not len(x) == len(features):
-            raise HTTPException(status_code=400, detail="Wrong number of features in data")
-    if not features_info.feature_names == features:
-        raise HTTPException(status_code=400, detail="Wrong names of features")
+    valid_data(data, features, features_info)
 
     logger.info(f"start predict")
     logger.info(f"model is {model}")
@@ -108,6 +129,11 @@ def load_model():
 @app.get("/predict/", response_model=List[YResponse])
 async def predict(request: XInput):
     return make_predict(request.data, request.features, model, transformer, features_info)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return PlainTextResponse(str(exc), status_code=400)
 
 
 if __name__ == "__main__":

@@ -42,3 +42,11 @@ def test_predict_error(dataset_for_predict_path: str):
         data_with_wrong_data = XInput(data=[[1]], features=data.columns.tolist())
         response = client.get("/predict/", json=data_with_wrong_data.dict())
         assert response.status_code == 400
+
+
+def test_pydandic_validator(bad_data_1: str, bad_data_2: str):
+    with TestClient(app) as client:
+        response = client.get("/predict/", json=bad_data_1)
+        assert response.status_code == 400
+        response = client.get("/predict/", json=bad_data_2)
+        assert response.status_code == 400
