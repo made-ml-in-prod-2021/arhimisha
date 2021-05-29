@@ -7,30 +7,30 @@ from typing import Union
 Array = Union[pd.DataFrame, np.ndarray]
 
 
-class mocked_model:
+class MockedModel:
     def predict(self, data: Array) -> Array:
         return np.zeros(shape=data.shape[0])
 
 
-class mocked_transformer:
+class MockedTransformer:
     def transform(self, data: Array) -> Array:
         return data
 
 
 @pytest.fixture()
 def mocking_model():
-    return mocked_model()
+    return MockedModel()
 
 
 @pytest.fixture()
 def mocking_transformer():
-    return mocked_transformer()
+    return MockedTransformer()
 
 
 @pytest.fixture()
 def dataset_for_predict_path():
     current_dir = os.path.dirname(__file__)
-    return os.path.join(current_dir, "data/test_data_for_predict.csv")
+    return os.path.join(current_dir, "../data/test_data_for_predict.csv")
 
 
 @pytest.fixture()
