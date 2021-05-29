@@ -1,5 +1,30 @@
 import os
 import pytest
+import numpy as np
+import pandas as pd
+from typing import Union
+
+Array = Union[pd.DataFrame, np.ndarray]
+
+
+class mocked_model:
+    def predict(self, data: Array) -> Array:
+        return np.zeros(shape=data.shape[0])
+
+
+class mocked_transformer:
+    def transform(self, data: Array) -> Array:
+        return data
+
+
+@pytest.fixture()
+def mocking_model():
+    return mocked_model()
+
+
+@pytest.fixture()
+def mocking_transformer():
+    return mocked_transformer()
 
 
 @pytest.fixture()
