@@ -32,13 +32,11 @@ def make_predict(server_address: str,
             predict = YResponse(**elem)
             result.append(predict.predict)
 
-        logger.info(f"save result")
-        with open(path_for_save_result, "w") as result_file:
-            json.dump(result, result_file)
     else:
-        logger.info(f"save result")
-        with open(path_for_save_result, "w") as result_file:
-            json.dump(response.json(), result_file)
+        result = response.json()
+    logger.info(f"save result")
+    with open(path_for_save_result, "w") as result_file:
+        json.dump(result, result_file)
 
 
 @click.command(name="make_predict")
