@@ -32,6 +32,7 @@ def test_predict_batch(dataset_for_predict_path: str):
             predict = YResponse(**elem)
             assert predict.predict in [0, 1]
 
+
 def test_predict_error(dataset_for_predict_path: str):
     with TestClient(app) as client:
         data = pd.read_csv(dataset_for_predict_path)
