@@ -27,7 +27,7 @@ def make_predict(server_address: str,
     )
     logger.info(f"parse result")
     result = []
-    if (response.status_code == 200):
+    if response.status_code == 200:
         for elem in response.json():
             predict = YResponse(**elem)
             result.append(predict.predict)
