@@ -1,0 +1,15 @@
+features_number: 13
+feature_names:
+  - age
+  - sex
+  - cp
+  - trestbps
+  - chol
+  - fbs
+  - restecg
+  - thalach
+  - exang
+  - oldpeak
+  - slope
+  - ca
+  - thal
