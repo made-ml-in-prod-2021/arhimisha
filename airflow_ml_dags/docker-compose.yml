@@ -93,5 +93,11 @@ services:
     image: airflow-ml-check-data
     restart: "no"
 
+  split_data:
+    build:
+      context: images/airflow-ml-split-data
+    image: airflow-ml-split-data
+    restart: "no"
+
 volumes:
   logs:

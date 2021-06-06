@@ -31,4 +31,11 @@ with DAG(
         do_xcom_push=False,
         volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
     )
-    prepare_data >> check_data
+    split_data = DockerOperator(
+        image="airflow-ml-split-data",
+        command="/data/prepared/{{ ds }}",
+        task_id="split-data",
+        do_xcom_push=False,
+        volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
+    )
+    prepare_data >> [check_data, split_data]
