@@ -24,3 +24,11 @@ with DAG(
         do_xcom_push=False,
         volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
     )
+    check_data = DockerOperator(
+        image="airflow-ml-check-data",
+        command="/data/prepared/{{ ds }}",
+        task_id="check-data",
+        do_xcom_push=False,
+        volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
+    )
+    prepare_data >> check_data
