@@ -38,4 +38,11 @@ with DAG(
         do_xcom_push=False,
         volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
     )
-    prepare_data >> [check_data, split_data]
+    training_model = DockerOperator(
+        image="airflow-ml-training-model",
+        command="/data/prepared/{{ ds }} /data/model/{{ ds }} ",
+        task_id="training-model",
+        do_xcom_push=False,
+        volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
+    )
+    prepare_data >> [check_data, split_data] >> training_model

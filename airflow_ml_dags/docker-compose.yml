@@ -99,5 +99,11 @@ services:
     image: airflow-ml-split-data
     restart: "no"
 
+  training-model:
+    build:
+      context: images/airflow-ml-training-model
+    image: airflow-ml-training-model
+    restart: "no"
+
 volumes:
   logs:
