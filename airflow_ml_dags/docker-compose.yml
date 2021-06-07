@@ -75,6 +75,12 @@ services:
     image: airflow-ml-base
     restart: "no"
 
+  prediction_base:
+    build:
+      context: images/airflow-ml-prediction-base
+    image: airflow-ml-prediction-base
+    restart: "no"
+
   generate_data:
     build:
       context: images/airflow-ml-generate-data
