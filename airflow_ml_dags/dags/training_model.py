@@ -45,4 +45,11 @@ with DAG(
         do_xcom_push=False,
         volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
     )
-    prepare_data >> [check_data, split_data] >> training_model
+    validation_model = DockerOperator(
+        image="airflow-ml-validation-model",
+        command="/data/prepared/{{ ds }} /data/model/{{ ds }} ",
+        task_id="validation-model",
+        do_xcom_push=False,
+        volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
+    )
+    prepare_data >> [check_data, split_data] >> training_model >> validation_model

@@ -105,5 +105,11 @@ services:
     image: airflow-ml-training-model
     restart: "no"
 
+  validation-model:
+    build:
+      context: images/airflow-ml-validation-model
+    image: airflow-ml-validation-model
+    restart: "no"
+
 volumes:
   logs:
