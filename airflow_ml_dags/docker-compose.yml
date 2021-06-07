@@ -117,5 +117,11 @@ services:
     image: airflow-ml-validation-model
     restart: "no"
 
+  prediction:
+    build:
+      context: images/airflow-ml-prediction
+    image: airflow-ml-prediction
+    restart: "no"
+
 volumes:
   logs:
