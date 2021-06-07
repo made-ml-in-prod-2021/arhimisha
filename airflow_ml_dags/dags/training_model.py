@@ -12,7 +12,7 @@ default_args = {
 }
 
 with DAG(
-        "prepare_data",
+        "training_model",
         default_args=default_args,
         schedule_interval="@daily",
         start_date=days_ago(1),
