@@ -31,35 +31,35 @@ with DAG(
     prepare_data = DockerOperator(
         image="airflow-ml-prepare-data",
         command="/data/raw/{{ ds }} /data/prepared/{{ ds }}",
-        task_id="prepare-data",
+        task_id="prepare_data",
         do_xcom_push=False,
         volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
     )
     check_data = DockerOperator(
         image="airflow-ml-check-data",
         command="/data/prepared/{{ ds }}",
-        task_id="check-data",
+        task_id="check_data",
         do_xcom_push=False,
         volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
     )
     split_data = DockerOperator(
         image="airflow-ml-split-data",
         command="/data/prepared/{{ ds }}",
-        task_id="split-data",
+        task_id="split_data",
         do_xcom_push=False,
         volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
     )
     training_model = DockerOperator(
         image="airflow-ml-training-model",
         command="/data/prepared/{{ ds }} /data/model/{{ ds }} ",
-        task_id="training-model",
+        task_id="training_model",
         do_xcom_push=False,
         volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
     )
     validation_model = DockerOperator(
         image="airflow-ml-validation-model",
         command="/data/prepared/{{ ds }} /data/model/{{ ds }} ",
-        task_id="validation-model",
+        task_id="validation_model",
         do_xcom_push=False,
         volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
     )
