@@ -1,4 +1,5 @@
 import os
+import json
 import click
 import pickle
 import pandas as pd
@@ -20,8 +21,8 @@ def validation_model(data_dir: str, model_dir: str):
     y_pred = model.predict(X_test)
     score = accuracy_score(y_test, y_pred)
 
-    with open(os.path.join(model_dir, "score.pkl"), "wb") as f:
-        pickle.dump(score, f)
+    with open(os.path.join(model_dir, "score.json"), "w") as f:
+        json.dump(score, f)
 
     # Variables not work
     # min_score = Variable.get("min_score")
