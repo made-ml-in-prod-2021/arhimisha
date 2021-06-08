@@ -63,5 +63,5 @@ with DAG(
         do_xcom_push=False,
         volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]
     )
-    wait_data >> wait_target >> prepare_data
+    [wait_data, wait_target] >> prepare_data
     prepare_data >> [check_data, split_data] >> training_model >> validation_model
