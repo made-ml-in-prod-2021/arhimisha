@@ -1,4 +1,4 @@
-FROM airflow-ml-prediction-base:latest
+FROM airflow-ml-base:latest
 
 COPY prediction.py /prediction.py
 

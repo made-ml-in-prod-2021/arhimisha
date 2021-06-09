@@ -75,10 +75,10 @@ services:
     image: airflow-ml-base
     restart: "no"
 
-  prediction_base:
+  dag-base:
     build:
-      context: images/airflow-ml-prediction-base
-    image: airflow-ml-prediction-base
+      context: images/airflow-dag-base
+    image: airflow-dag-base
     restart: "no"
 
   generate_data:
