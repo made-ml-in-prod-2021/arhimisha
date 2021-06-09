@@ -15,6 +15,10 @@ To down the DAGs use the following command:
 ```
 docker-compose down
 ```
+Add variables from `airflow_init_files/variables.json`. 
+Open Airflow Web UI -> Admin -> Variables. Add file and click "Import Variables".
+
+
 If you modify the DAGs or the scripts inside containers, rebuild container:
 ```
 docker-compose build <service_name>
