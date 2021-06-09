@@ -4,6 +4,7 @@ from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 from airflow.sensors.filesystem import FileSensor
 from airflow.utils.dates import days_ago
+from airflow.models import Variable
 
 default_args = {
     "owner": "arhimisha",
@@ -18,6 +19,9 @@ with DAG(
         schedule_interval="@daily",
         start_date=days_ago(1),
 ) as dag:
+    min_score = Variable.get("min_score")
+    prod_model_path = Variable.get("model_path")
+
     wait_data = FileSensor(
         task_id="data_file_sensor",
         filepath="/opt/airflow/data/raw/{{ ds }}/data.csv",
@@ -58,7 +62,10 @@ with DAG(
     )
     validation_model = DockerOperator(
         image="airflow-ml-validation-model",
-        command="/data/prepared/{{ ds }} /data/model/{{ ds }} ",
+        command=" ".join(["/data/prepared/{{ ds }}",
+                          "/data/model/{{ ds }}",
+                          str(min_score),
+                          prod_model_path]),
         task_id="validation_model",
         do_xcom_push=False,
         volumes=["D:/Made2020/2_ml_in_prod/homework/airflow_ml_dags/data:/data"]

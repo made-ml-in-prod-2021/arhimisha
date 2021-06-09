@@ -2,15 +2,21 @@ import os
 import json
 import click
 import pickle
+import shutil
 import pandas as pd
 from sklearn.metrics import accuracy_score
-from airflow.models import Variable
 
 
 @click.command("validation_model")
 @click.argument("data_dir")
 @click.argument("model_dir")
-def validation_model(data_dir: str, model_dir: str):
+@click.argument("min_score")
+@click.argument("prod_model_path")
+def validation_model(data_dir: str,
+                     model_dir: str,
+                     min_score: str,
+                     prod_model_path: str
+                     ):
     X_test = pd.read_csv(os.path.join(data_dir, "data_test.csv"))
     y_test = pd.read_csv(os.path.join(data_dir, "target_test.csv"))
 
@@ -24,13 +30,8 @@ def validation_model(data_dir: str, model_dir: str):
     with open(os.path.join(model_dir, "score.json"), "w") as f:
         json.dump(score, f)
 
-    # Variables not work
-    # min_score = Variable.get("min_score")
-    min_score = 0.8
-    if score > min_score:
-        pass
-        # Variables not work
-        # Variable.set("model_path", model_path)
+    if score > float(min_score) or not os.path.exists(prod_model_path):
+        shutil.copy2(model_path, prod_model_path)
 
 
 if __name__ == "__main__":
