@@ -16,8 +16,7 @@ def prediction(data_dir: str, prod_model_path: str, output_dir: str):
 
     y_pred = model.predict(X)
 
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    os.makedirs(output_dir, exist_ok=True)
     pd.DataFrame(y_pred).to_csv(os.path.join(output_dir, "prediction.csv"), index=False)
 
 

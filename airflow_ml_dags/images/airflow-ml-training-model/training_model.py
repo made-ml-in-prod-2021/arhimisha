@@ -15,8 +15,7 @@ def training_model(data_dir: str, model_dir: str):
     model.fit(X_train, y_train)
     model_path = os.path.join(model_dir, "model.pkl")
 
-    if not os.path.exists(model_dir):
-        os.makedirs(model_dir)
+    os.makedirs(model_dir, exist_ok=True)
     with open(model_path, "wb") as f:
         pickle.dump(model, f)
 
