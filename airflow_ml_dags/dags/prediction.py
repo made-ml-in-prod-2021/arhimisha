@@ -13,14 +13,14 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
 }
 
+prod_model_path = Variable.get("model_path")
+
 with DAG(
         "prediction",
         default_args=default_args,
         schedule_interval="@daily",
         start_date=days_ago(1),
 ) as dag:
-    prod_model_path = Variable.get("model_path")
-
     wait = FileSensor(
         task_id="model_file_sensor",
         filepath="/opt/airflow/data/model/{{ ds }}/model.pkl",

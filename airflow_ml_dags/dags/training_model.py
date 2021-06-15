@@ -13,15 +13,15 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
 }
 
+min_score = Variable.get("min_score")
+prod_model_path = Variable.get("model_path")
+
 with DAG(
         "training_model",
         default_args=default_args,
         schedule_interval="@daily",
         start_date=days_ago(1),
 ) as dag:
-    min_score = Variable.get("min_score")
-    prod_model_path = Variable.get("model_path")
-
     wait_data = FileSensor(
         task_id="data_file_sensor",
         filepath="/opt/airflow/data/raw/{{ ds }}/data.csv",
