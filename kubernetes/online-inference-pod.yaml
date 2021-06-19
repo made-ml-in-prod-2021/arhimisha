@@ -10,10 +10,3 @@ spec:
       name: fastapi-ml
       ports:
         - containerPort: 80
-      resources:
-        requests:
-          memory: "128Mi"
-          cpu: "500m"
-        limits:
-          memory: "512Mi"
-          cpu: "900m"
