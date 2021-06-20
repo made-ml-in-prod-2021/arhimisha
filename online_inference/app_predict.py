@@ -144,9 +144,9 @@ async def predict(request: XInput):
 async def healthz() -> bool:
     work_time = time.time() - start_time
     if model is not None and work_time < DEAD_DELAY_SECONDS:
-        response = PlainTextResponse(str("OK"), status_code=200)
+        response = PlainTextResponse("OK", status_code=200)
     else:
-        response = PlainTextResponse(str("Bad"), status_code=400)
+        response = PlainTextResponse("Bad", status_code=400)
     return response
 
 
