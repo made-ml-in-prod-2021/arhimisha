@@ -7,6 +7,7 @@ metadata:
 spec:
   containers:
     - image: arhimisha/ml_in_prod_task_2:v2
+      imagePullPolicy: "Always"
       name: fastapi-ml
       ports:
         - containerPort: 80
