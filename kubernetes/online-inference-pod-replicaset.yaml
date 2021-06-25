@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: fast-api-replica-set
+  labels:
+    app: fast-api-replica-set
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fast-api-replica-set
+  template:
+    metadata:
+      name: fast-api-replica-set
+      labels:
+        app: fast-api-replica-set
+    spec:
+      containers:
+        - image: arhimisha/ml_in_prod_task_2:v1
+          name: fast-api
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"

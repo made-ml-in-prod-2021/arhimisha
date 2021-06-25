@@ -3,6 +3,7 @@ import logging
 import os
 import pickle
 from typing import List, Union, Optional, NoReturn
+import time
 
 import pandas as pd
 import uvicorn
@@ -14,6 +15,10 @@ from sklearn.svm import LinearSVC
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
 from src.entities.features_info import FeaturesInfo, read_features_info
+
+
+START_DELAY_SECONDS = 30
+DEAD_DELAY_SECONDS = 60
 
 logger = logging.getLogger(__name__)
 log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -96,6 +101,7 @@ def make_predict(
 
 
 app = FastAPI()
+start_time = time.time()
 
 
 @app.get("/")
@@ -108,6 +114,9 @@ def load_model():
     global model
     global transformer
     global features_info
+
+    # delay
+    time.sleep(START_DELAY_SECONDS)
 
     model_path = os.getenv("PATH_TO_MODEL")
     if model_path is None:
@@ -129,6 +138,16 @@ def load_model():
 @app.get("/predict/", response_model=List[YResponse])
 async def predict(request: XInput):
     return make_predict(request.data, request.features, model, transformer, features_info)
+
+
+@app.get("/healthz")
+async def healthz() -> bool:
+    work_time = time.time() - start_time
+    if model is not None and work_time < DEAD_DELAY_SECONDS:
+        response = PlainTextResponse("OK", status_code=200)
+    else:
+        response = PlainTextResponse("Bad", status_code=400)
+    return response
 
 
 @app.exception_handler(RequestValidationError)

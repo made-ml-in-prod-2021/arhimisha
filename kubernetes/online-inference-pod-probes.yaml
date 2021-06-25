@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fastapi-ml-probe
+  labels:
+    app: fastapi-ml-probe
+spec:
+  containers:
+    - image: arhimisha/ml_in_prod_task_2:v2
+      imagePullPolicy: "Always"
+      name: fastapi-ml
+      ports:
+        - containerPort: 80
+      resources:
+        requests:
+          memory: "128Mi"
+          cpu: "500m"
+        limits:
+          memory: "512Mi"
+          cpu: "900m"
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 80
+        initialDelaySeconds: 15
+        periodSeconds: 5
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 80
+        initialDelaySeconds: 40
+        periodSeconds: 3
