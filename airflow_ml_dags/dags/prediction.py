@@ -4,7 +4,6 @@ from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 from airflow.sensors.filesystem import FileSensor
 from airflow.utils.dates import days_ago
-from airflow.models import Variable
 
 default_args = {
     "owner": "arhimisha",
@@ -13,7 +12,7 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
 }
 
-prod_model_path = Variable.get("model_path")
+prod_model_path = "{{ var.value.model_path }}"
 
 with DAG(
         "prediction",
